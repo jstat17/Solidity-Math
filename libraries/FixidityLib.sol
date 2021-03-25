@@ -1,9 +1,11 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
 
 /**
  * @title FixidityLib
  * @author Gadi Guy, Alberto Cuesta Canada
+ * @author John Michael Statheros (GitHub: jstat17)
  * @notice This library provides fixed point arithmetic with protection against
  * overflow. 
  * All operations are done with int256 and the operands must have been created 
@@ -13,6 +15,7 @@ pragma solidity ^0.5.0;
  * creation of fixed point numbers. Use maxFixedMul(), maxFixedDiv() and
  * maxFixedAdd() if you want to be certain that those operations don't 
  * overflow.
+ * @notice Fixed bugs which allowed updating to 0.8.0 and above.
  */
 library FixidityLib {
 
@@ -203,8 +206,9 @@ library FixidityLib {
         
         uint8 decimalDifference;
         if ( _originDigits > _destinationDigits ){
+            //int256 origDigits = _originDigits;
             decimalDifference = _originDigits - _destinationDigits;
-            return x/(uint128(10)**uint128(decimalDifference));
+            return x/(int256(10)**uint256(decimalDifference));
         }
         else if ( _originDigits < _destinationDigits ){
             decimalDifference = _destinationDigits - _originDigits;
@@ -214,9 +218,9 @@ library FixidityLib {
             //     decimalDifference = abs(_destinationDigits - _originDigits)
             //     decimalDifference < 38
             //     10**38 < 2**128-1
-            assert(x <= maxInt256()/uint128(10)**uint128(decimalDifference));
-            assert(x >= minInt256()/uint128(10)**uint128(decimalDifference));
-            return x*(uint128(10)**uint128(decimalDifference));
+            assert(x <= maxInt256()/int128(10)**uint128(decimalDifference));
+            assert(x >= minInt256()/int128(10)**uint128(decimalDifference));
+            return x*(int128(10)**uint128(decimalDifference));
         }
         // _originDigits == digits()) 
         return x;
