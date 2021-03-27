@@ -4,3 +4,4 @@ Numerical approximations to mathematical functions in Solidity. Builds on the Fi
 ## Current features: 
 - sine, cosine, tangent trigonometric functions (in radians).
 - value of π to 24 digits of precision.
+- generate an int256 pseudorandom number between some upper and lower bounds (inclusive)
