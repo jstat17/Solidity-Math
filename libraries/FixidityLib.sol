@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.0; // should work with ^0.8.0 and below
 
 
 /**
  * @title FixidityLib
- * @author Gadi Guy, Alberto Cuesta Canada
- * @author John Michael Statheros (GitHub: jstat17)
+ * @author Gadi Guy, Alberto Cuesta Canada / John Michael Statheros (GitHub: jstat17)
  * @notice This library provides fixed point arithmetic with protection against
  * overflow. 
  * All operations are done with int256 and the operands must have been created 
@@ -15,7 +14,7 @@ pragma solidity ^0.8.0;
  * creation of fixed point numbers. Use maxFixedMul(), maxFixedDiv() and
  * maxFixedAdd() if you want to be certain that those operations don't 
  * overflow.
- * @notice Fixed bugs which allowed updating to 0.8.0 and above.
+ * @notice Fixed bugs which allowed updating to 0.8.0 and below.
  */
 library FixidityLib {
 

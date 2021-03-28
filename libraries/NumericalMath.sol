@@ -160,7 +160,7 @@ library NumericalMath {
      * @return random int256 between upper and lower (inclusive)
      */
     function getRandomNum(int256 num_seed, int256 lower, int256 upper) public pure returns(int256) {
-        int256 rand_num = FixidityLib.abs(callKeccak256(abi.encodePacked(num_seed))) % (upper-lower+1) + lower;
+        int256 rand_num = convBtwUpLo(callKeccak256(abi.encodePacked(num_seed)), lower, upper);
         return rand_num;
     }
     
@@ -169,7 +169,49 @@ library NumericalMath {
      * @param seed: bytes object
      * @return int256 of hashed seed
      */
-    function callKeccak256(bytes memory seed) internal pure returns(int256) {
+    function callKeccak256(bytes memory seed) public pure returns(int256) {
         return int256(uint256(keccak256(seed)));
     }
+    
+    /**
+     * @notice Helper function to convert some large number
+     * to be between an upper and lower bound.
+     * @param bigNum: int256 of some large number
+     * @param lower: lower-bound of the output number
+     * @param upper: upper-bound of the output number
+     * @return int256 between upper and lower (inclusive)
+     */
+    function convBtwUpLo(int256 bigNum, int256 lower, int256 upper) public pure returns(int256) {
+        return FixidityLib.add(FixidityLib.abs(bigNum) % FixidityLib.add(FixidityLib.subtract(upper, lower), 1), lower);
+    }
+    
+    /**
+     * @notice I saw Patrick Collins use this method in a
+     * Chainlink video tutorial, where he took a large
+     * random number and broke it up into multiple
+     * random numbers. The use case is for verifiably
+     * random number generation, so that multiple
+     * random numbers do not need to be generated.
+     * @dev take note that this only generates
+     * a random number between 1 and an upper bound.
+     * Should update so that any range can be
+     * generated.
+     * @param x: the large random number
+     * @param y: the upper bound of the random number,
+     * but this value must mutate with each successive
+     * call of this function.
+     * @param y_orig: the original and unmutating
+     * upper bound of the random number
+     * @return new_rand: the new random number that
+     * is between 1 and upper
+     * @return y: the mutated form of the upper bound
+     * that must be used as the y in the next call of
+     * this function
+     */
+    function getAnotherSplitRand(int256 x, int256 y, int256 y_orig) public pure returns(int256, int256) {
+        int256 new_rand = (x % y)/(y/y_orig) + 1;
+        y *= y;
+        return (new_rand, y);
+    }
+    
 }
